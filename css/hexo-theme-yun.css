@@ -129,7 +129,7 @@ body::before {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background-image: url("/images/b5.jpg");
+  background-image: url("https://cdn.jsdelivr.net/gh/xq14183903/xq14183903.github.io@latest/images/b4.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
