@@ -1774,7 +1774,7 @@ body::before {
   text-decoration: underline;
 }
 .search-popup {
-  background-image: url("https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/bg/stars-timing-0-blur-30px.jpg");
+  background-image: url("/images/b1.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
