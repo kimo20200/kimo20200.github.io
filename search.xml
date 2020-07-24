@@ -4,13 +4,50 @@
   
     
     <entry>
-      <title>从零开始的深度学习[Win10][实战][1]-安装Pytorch1.5.1(CUDA)</title>
+      <title>训练数据准备与导入[自定义数据集][分类问题]</title>
+      <link href="/2020/07/24/DL_P2/"/>
+      <url>/2020/07/24/DL_P2/</url>
+      
+        <content type="html"><![CDATA[<h4 id="第一步：准备图片"><a href="#第一步：准备图片" class="headerlink" title="第一步：准备图片"></a>第一步：准备图片</h4><p>首先我们需要准备好用于训练和验证的图片，图片的分辨率可以随意，因为pytorch有resize的功能，可以把图片缩放到任意你想要的大小。图片支持类型：.JPG，.PNG…（反正常用的一般都支持）<br>详细参考官网：<br><a href="https://pillow.readthedocs.io/en/5.1.x/handbook/image-file-formats.html" target="_blank" rel="noopener">https://pillow.readthedocs.io/en/5.1.x/handbook/image-file-formats.html</a></p><h4 id="第二步：图片分类"><a href="#第二步：图片分类" class="headerlink" title="第二步：图片分类"></a>第二步：图片分类</h4><p>我们需要创建一个文件夹（最好是和代码文件在同级目录下，虽然我没有这样做哈哈），你可以取名为test啊什么的，反正随意啦。接着我们要在这个文件夹下再创建两个文件夹，分别命名为<strong>train</strong>和<strong>valid</strong>，存放训练数据和验证数据，哈哈别急还没完。我们还需要在这两个文件夹下创建n个文件夹（禁止套娃！），文件夹的个数取决你的分类的类别，有多少类就要创建多少个文件夹，一个文件夹对应一个类。你也可以看下面的导图。创建完后就可以把你准备好的图片按照对应的文件夹进行存放啦</p><p><img src="https://cdn.jsdelivr.net/gh/xq14183903/xq14183903.github.io@latest/images/dl_practice/2/1.jpg" alt="" loading="lazy"><em>文件夹分类导图</em></p><h4 id="第三步：图片导入"><a href="#第三步：图片导入" class="headerlink" title="第三步：图片导入"></a>第三步：图片导入</h4><p>完整代码：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#常用头文件</span><br><span class="line">from glob import glob</span><br><span class="line">import os</span><br><span class="line">import numpy as np</span><br><span class="line">from PIL import Image</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">import shutil</span><br><span class="line">from torchvision import transforms</span><br><span class="line">from torchvision import models</span><br><span class="line">import torch</span><br><span class="line">from torch.autograd import Variable</span><br><span class="line">import torch.nn as nn</span><br><span class="line">from torch.optim import lr_scheduler</span><br><span class="line">from torch import optim</span><br><span class="line">from torchvision.datasets import ImageFolder</span><br><span class="line">from torchvision.utils import make_grid</span><br><span class="line">import time</span><br><span class="line">import cv2</span><br><span class="line"></span><br><span class="line">train &#x3D; ImageFolder(&#39;C:&#x2F;Users&#x2F;Arthur&#x2F;Desktop&#x2F;sum&#x2F;tempu&#x2F;train&#x2F;&#39;,simple_transform)</span><br><span class="line">valid &#x3D; ImageFolder(&#39;C:&#x2F;Users&#x2F;Arthur&#x2F;Desktop&#x2F;sum&#x2F;tempu&#x2F;valid&#x2F;&#39;,simple_transform)</span><br><span class="line">train_data_gen &#x3D; torch.utils.data.DataLoader(train,shuffle&#x3D;True,batch_size&#x3D;16,num_workers&#x3D;0,drop_last&#x3D;True)</span><br><span class="line">valid_data_gen &#x3D; torch.utils.data.DataLoader(valid,shuffle&#x3D;True,batch_size&#x3D;16,num_workers&#x3D;0,drop_last&#x3D;True)</span><br><span class="line">dataset_sizes &#x3D; &#123;&#39;train&#39;:len(train_data_gen.dataset),&#39;valid&#39;:len(valid_data_gen.dataset)&#125;</span><br><span class="line">dataloaders &#x3D; &#123;&#39;train&#39;:train_data_gen,&#39;valid&#39;:valid_data_gen&#125;</span><br></pre></td></tr></table></figure><p>注：</p><ol><li>如果你的代码文件和你的数据集在同一文件夹下，那么引用的时候就可以不用全路径，如：</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">train &#x3D; ImageFolder(&#39;&#x2F;tempu&#x2F;train&#x2F;&#39;,simple_transform)</span><br><span class="line">valid &#x3D; ImageFolder(&#39;&#x2F;tempu&#x2F;valid&#x2F;&#39;,simple_transform)</span><br></pre></td></tr></table></figure><ol start="2"><li><strong>simple_transform</strong>是你需要应用的数据变换和增强</li><li><strong>shuffle=True</strong>：训练时随机抽取样本</li><li><strong>drop_last=True</strong>：当你的数据集不能被定义的<strong>batch_size</strong>整除时，多余的部分会被丢掉。</li><li><strong>num_workers=0</strong> 启用多线程个数，一般设置成0是不会有任何问题的。启用多线程可以加快数据集读取速度，<strong>但是</strong>很多时候需要自己调试，有些IDE并不支持。</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 从零开始的深度学习[Win10][实战] </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 深度学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>安装Pytorch1.5.1(CUDA)</title>
       <link href="/2020/02/26/DL_P1/"/>
       <url>/2020/02/26/DL_P1/</url>
       
-        <content type="html"><![CDATA[<h2 id="从零开始的深度学习-Win10-实战-1"><a href="#从零开始的深度学习-Win10-实战-1" class="headerlink" title="从零开始的深度学习[Win10][实战][1]"></a>从零开始的深度学习[Win10][实战][1]</h2><h3 id="安装Pytorch1-5-1-CUDA"><a href="#安装Pytorch1-5-1-CUDA" class="headerlink" title="安装Pytorch1.5.1(CUDA)"></a>安装Pytorch1.5.1(CUDA)</h3><h4 id="前提需要安装完Anaconda3"><a href="#前提需要安装完Anaconda3" class="headerlink" title="前提需要安装完Anaconda3"></a>前提需要安装完Anaconda3</h4><p>详细请参考此链接：<br><a href="https://www.bilibili.com/read/cv6124348" target="_blank" rel="noopener">https://www.bilibili.com/read/cv6124348</a></p><h4 id="第一步："><a href="#第一步：" class="headerlink" title="第一步："></a>第一步：</h4><p>打开<strong>开始菜单</strong>，直接输入anaconda，打开 <strong>anaconda prompt</strong><br><img src="/images/dl_practice/1/2.jpg" alt="" loading="lazy"><br>结果：<br><img src="/images/dl_practice/1/3.jpg" alt="" loading="lazy"></p><h4 id="第二步："><a href="#第二步：" class="headerlink" title="第二步："></a>第二步：</h4><p>我们需要更换清华大学开源下载库(直接从官网下载容易下载失败)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda config --add channels https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;free&#x2F;</span><br><span class="line">conda config --add channels https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;main&#x2F;</span><br><span class="line">conda config --set show_channel_urls yes</span><br><span class="line">conda config --add channels</span><br></pre></td></tr></table></figure><h4 id="第三步："><a href="#第三步：" class="headerlink" title="第三步："></a>第三步：</h4><p>替换完下载源后我们就可以开始安装啦：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install pytorch torchvision cudatoolkit&#x3D;10.1</span><br></pre></td></tr></table></figure><p>后面只要跟着提示走就可以了，作者因为已经安装完成所以这里不再做演示<br>若下载中出现网络连接失败情况，请重新尝试几次<br>老版本的pytorch可以进行手动删除或者不删，因为高版本会替换掉低版本</p><h4 id="第四步："><a href="#第四步：" class="headerlink" title="第四步："></a>第四步：</h4><p>安装完后，我们可以测试一下，可以直接在 anaconda prompt里测试，也可以使用Jupyter, Spyder中进行测试</p><p>Eg.<br><img src="/images/dl_practice/1/1.jpg" alt="" loading="lazy"><br>如果你的结果和我上面这张图一样，那么就<strong>恭喜你！安装成功啦！</strong></p>]]></content>
+        <content type="html"><![CDATA[<h4 id="前提：需要安装完Anaconda3"><a href="#前提：需要安装完Anaconda3" class="headerlink" title="前提：需要安装完Anaconda3"></a>前提：需要安装完Anaconda3</h4><p>详细请参考此链接：<br><a href="https://www.bilibili.com/read/cv6124348" target="_blank" rel="noopener">https://www.bilibili.com/read/cv6124348</a></p><h4 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h4><p>打开<strong>开始菜单</strong>，直接输入anaconda，打开 <strong>anaconda prompt</strong><br><img src="/images/dl_practice/1/2.jpg" alt="" loading="lazy"><br>结果：<br><img src="/images/dl_practice/1/3.jpg" alt="" loading="lazy"></p><h4 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h4><p>我们需要更换清华大学开源下载库(直接从官网下载容易下载失败)：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda config --add channels https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;free&#x2F;</span><br><span class="line">conda config --add channels https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;main&#x2F;</span><br><span class="line">conda config --set show_channel_urls yes</span><br><span class="line">conda config --add channels</span><br></pre></td></tr></table></figure><h4 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h4><p>替换完下载源后我们就可以开始安装啦：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install pytorch torchvision cudatoolkit&#x3D;10.1</span><br></pre></td></tr></table></figure><p>后面只要跟着提示走就可以了，作者因为已经安装完成所以这里不再做演示<br>若下载中出现网络连接失败情况，请重新尝试几次<br>老版本的pytorch可以进行手动删除或者不删，因为高版本会替换掉低版本</p><h4 id="第四步"><a href="#第四步" class="headerlink" title="第四步"></a>第四步</h4><p>安装完后，我们可以测试一下，可以直接在 anaconda prompt里测试，也可以使用Jupyter, Spyder中进行测试</p><p>Eg.<br><img src="/images/dl_practice/1/1.jpg" alt="" loading="lazy"><br>如果你的结果和我上面这张图一样，那么就<strong>恭喜你！安装成功啦！</strong></p>]]></content>
       
       
+      <categories>
+          
+          <category> 从零开始的深度学习[Win10][实战] </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 深度学习 </tag>
+            
+        </tags>
       
     </entry>
     
