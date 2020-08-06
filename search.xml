@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>关于矩阵，向量和标量的转置，相加和相乘</title>
+      <link href="/2020/08/05/DL_Theory2/"/>
+      <url>/2020/08/05/DL_Theory2/</url>
+      
+        <content type="html"><![CDATA[<h4 id="转置-transpose"><a href="#转置-transpose" class="headerlink" title="转置(transpose)"></a>转置(transpose)</h4><ul><li>定义：给定m x n矩阵A，则A的转置是一个n x m矩阵，它的列是由A的行组成的</li><li>变量表示：<br>$$ \bm{A}^T $$</li><li>例：给定一个矩阵：<br>$$ \bm{A} = \begin{bmatrix} A_{1,1} &amp; A_{1,2} \cr A_{2,1} &amp; A_{2,2} \end{bmatrix} $$<br>它的转置是：<br>$$ \bm{A}^{T} = \begin{bmatrix} A_{1,1} &amp; A_{2,1} \cr A_{1,2} &amp; A_{2,2} \end{bmatrix} $$</li><li>有时，我们通过将向量元素作为行矩阵写在文本行中，然后使用转置操作将其变为标准的列向量，比如：<br>$$ \bm{x} = [x_1, x_2, x_3]^T $$</li><li>标量的转置等于它本身，即：<br>$$ a = a^T $$</li></ul><h4 id="加法"><a href="#加法" class="headerlink" title="加法"></a>加法</h4><ul><li>定义：只要矩阵的形状一样，我们可以把两个矩阵相加。两个矩阵相加是指对应位置的元素相加，比如：<br>$$ \bm{C} = \bm{A} + \bm{B} $$ 其中 $$ C_{i,j} = A_{i,j} + B_{i,j} $$</li><li>标量和矩阵相加时，我们只需要将其与矩阵的每个元素相加，比如<br>$$ \bm{D} = \bm{B} + c $$ 其中 $$ D_{i,j} = B_{i,j} + c $$</li><li>在深度学习中，我们允许矩阵和向量相加，比如：<br>$$ \bm{C} = \bm{A} + \bm{b} $$ 其中 $$ C_{i,j} = A_{i,j} + b_{j} $$<br>这种隐式地复制向量b到很多位置的方式，称为<strong>广播(broadcasting)</strong></li></ul><h4 id="乘法"><a href="#乘法" class="headerlink" title="乘法"></a>乘法</h4><ul><li>定义：两个矩阵A和B的<strong>矩阵乘积(matrix product)</strong>是第三个矩阵C(n x p)。为了使乘法可被定义，<em>矩阵A(m x n)的列数</em>必须和<em>矩阵B(n x p)的行数</em>相等</li><li>写法：$$ \bm{C} = \bm{A}  \bm{B} $$<br>具体操作方法：<br>$$ C_{i,j} = \displaystyle\sum_{k} A_{i,k} B_{k,j} $$</li></ul><h4 id="参考目录"><a href="#参考目录" class="headerlink" title="参考目录"></a>参考目录</h4><blockquote><p>Goodfellow, I., Bengio, Y. and Courville, A., 2016. Deep learning. MIT press.<br>Lay, D.C., 2016. Linear Algebra and its applications 5th edition. Pearson.</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 从零开始的深度学习[理论] </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 线性代数 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>标量、向量、矩阵和张量</title>
       <link href="/2020/08/02/DL_Theory1/"/>
       <url>/2020/08/02/DL_Theory1/</url>
